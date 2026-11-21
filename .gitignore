@@ -1,9 +1,8 @@
 .venv/
-data/
 __pycache__/
-*.pt.pytest_cache/
-.ruff_cache/
-outputs/
-space/
-
+.pytest_cache/
+data/
+*.pt
+*.pth
 src.zip
+space/

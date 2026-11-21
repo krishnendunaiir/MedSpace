@@ -12,7 +12,9 @@ def test_sections():
     assert t.startswith("# Chest X-ray")
     for s in ("## Data", "## Method", "## Results", "## Explainability", "## Limitations", "## Reproduce", "## Credits"):
         assert s in t, s
-    assert "not for diagnosis" in t and "outputs/demo.gif" in t
+    assert "not for diagnosis" in t
+    assert "demo.gif" not in t and "Live demo" not in t
+    assert "outputs/demo.gif" in render(R, T, A, {}, True)
 
 
 def test_numbers():
@@ -24,7 +26,7 @@ def test_numbers():
 
 
 def test_notes():
-    assert render(R, T, A, {}).count("TBD") == 3
-    n = {"space_url": "https://x.y", "heatmap_note": "h", "missed_note": "m"}
+    assert render(R, T, A, {}).count("TBD") == 2
+    n = {"heatmap_note": "h", "missed_note": "m"}
     t = render(R, T, A, n)
-    assert "TBD" not in t and "Live demo: https://x.y" in t and render(R, T, A, n) == t
+    assert "TBD" not in t and render(R, T, A, n) == t

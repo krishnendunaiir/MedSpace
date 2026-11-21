@@ -1,4 +1,4 @@
-﻿import json
+import json
 from pathlib import Path
 
 
@@ -6,10 +6,9 @@ def load(p):
     return json.loads(Path(p).read_text(encoding="utf-8-sig"))
 
 
-def render(b, t, a, n):
+def render(b, t, a, n, gif=False):
     bl, tr = a["baseline"], a["trimmed"]
     rows = "\n".join(f"| {k} | {bl[k]:.3f} | {tr[k]:.3f} |" for k in bl)
-    link = n.get("space_url", "TBD")
     heat = n.get("heatmap_note", "TBD")
     missed = n.get("missed_note", "TBD")
     lines = [
@@ -17,10 +16,7 @@ def render(b, t, a, n):
         "",
         "ResNet-18 fine-tuned to classify chest X-rays as NORMAL or PNEUMONIA, with Grad-CAM heatmaps and ablation tests that check what the model relies on. Research demo only. Not a medical device and not for diagnosis.",
         "",
-        f"Live demo: {link}",
-        "",
-        "![demo](outputs/demo.gif)",
-        "",
+        *(["![demo](outputs/demo.gif)", ""] if gif else []),
         "## Data",
         "",
         "Kaggle \"Chest X-Ray Images (Pneumonia)\" (Kermany et al., pediatric chest X-rays from Guangzhou Women and Children's Medical Center). The original train/val/test folders were pooled (5,856 images) and re-split 70/15/15 (4,077 / 901 / 878).",
@@ -101,5 +97,5 @@ def render(b, t, a, n):
 if __name__ == "__main__":
     o = Path("outputs")
     notes = load(o / "notes.json") if (o / "notes.json").exists() else {}
-    text = render(load(o / "results_baseline.json"), load(o / "results.json"), load(o / "ablation.json"), notes)
+    text = render(load(o / "results_baseline.json"), load(o / "results.json"), load(o / "ablation.json"), notes, (o / "demo.gif").exists())
     Path("README.md").write_text(text, encoding="utf-8")

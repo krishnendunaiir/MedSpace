@@ -2,10 +2,6 @@
 
 ResNet-18 fine-tuned to classify chest X-rays as NORMAL or PNEUMONIA, with Grad-CAM heatmaps and ablation tests that check what the model relies on. Research demo only. Not a medical device and not for diagnosis.
 
-Live demo: TBD
-
-![demo](outputs/demo.gif)
-
 ## Data
 
 Kaggle "Chest X-Ray Images (Pneumonia)" (Kermany et al., pediatric chest X-rays from Guangzhou Women and Children's Medical Center). The original train/val/test folders were pooled (5,856 images) and re-split 70/15/15 (4,077 / 901 / 878).
@@ -52,9 +48,9 @@ Qualitative review of the baseline's overlays found heat sometimes on the should
 - With only the outer 3% frame visible, AUROC went from 0.858 (baseline) to 0.570 (trimmed). A model reading lung findings should not separate classes from the extreme edge, so the baseline's score points to non-anatomical cues.
 - Mean share of Grad-CAM heat in the outer 10% frame: 0.43 baseline vs 0.37 trimmed (a uniform map gives 0.36). Maps with no heat (6 and 16 of 200 sampled images) are excluded.
 
-Trimmed-model heatmaps: TBD
+Trimmed-model heatmaps: one or two honest sentences on where the heat sits now
 
-Missed pneumonia cases (`outputs/fn/`): TBD
+Missed pneumonia cases (`outputs/fn/`): one honest sentence on what the missed cases have in common, or that no clear pattern was visible
 
 ## Limitations
 

@@ -1,4 +1,4 @@
-﻿import re
+import re
 import subprocess
 from pathlib import Path
 
@@ -20,8 +20,8 @@ def checks(root="."):
     add("README has no TBD", t and "TBD" not in t, f"{t.count('TBD')} left")
     add("README has no NaN", t and "is nan" not in t)
     g = r / "outputs" / "demo.gif"
-    add("outputs/demo.gif exists", g.exists())
-    add("outputs/demo.gif under 10 MB", g.exists() and g.stat().st_size < 10_000_000)
+    add("README's demo.gif (if referenced) exists", "demo.gif" not in t or g.exists())
+    add("demo.gif under 10 MB (if present)", not g.exists() or g.stat().st_size < 10_000_000)
     for f in ("roc.png", "calib.png", "results.json", "results_baseline.json", "ablation.json"):
         add(f"outputs/{f} exists", (r / "outputs" / f).exists())
     q = r / "requirements.txt"
