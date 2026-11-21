@@ -1,10 +1,12 @@
-﻿from PIL import Image
+﻿from pathlib import Path
 
-from src.data import build, gather
+from PIL import Image
+
+from src.data import CXR, build, gather
 from src.split import pid
 
 
-def make(root):
+def make(root: Path) -> None:
     for i in range(30):
         s = ("train", "val", "test")[i % 3]
         for c, f in (("NORMAL", "IM-{:04d}-{:04d}.png"), ("PNEUMONIA", "person{}_bacteria_{}.png")):
@@ -14,11 +16,11 @@ def make(root):
                 Image.new("L", (32, 32)).save(d / f.format(i, j))
 
 
-def groups(ds):
+def groups(ds: CXR) -> set[str]:
     return {pid(p) for p, _ in ds.items}
 
 
-def test_build(tmp_path):
+def test_build(tmp_path: Path) -> None:
     make(tmp_path)
     assert len(gather(str(tmp_path))) == 120
     tr, va, te = build(str(tmp_path))

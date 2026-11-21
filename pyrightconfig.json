@@ -1,3 +1,11 @@
+$cfg = @'
 {
-  "extraPaths": ["."]
+  "venvPath": ".",
+  "venv": ".venv",
+  "extraPaths": ["."],
+  "include": ["src", "tests"],
+  "typeCheckingMode": "standard"
 }
+'@
+
+[System.IO.File]::WriteAllText("$PWD\pyrightconfig.json", $cfg, (New-Object System.Text.UTF8Encoding $false))
