@@ -4,3 +4,4 @@ pillow
 scikit-learn
 grad-cam
 pytestmatplotlib
+gradio
