@@ -4,3 +4,4 @@ __pycache__/
 *.pt.pytest_cache/
 .ruff_cache/
 outputs/
+space/
