@@ -13,9 +13,20 @@ CLASSES = ["NORMAL", "PNEUMONIA"]
 EXT = (".jpeg", ".jpg", ".png")
 
 
-def tf(train):
+class Trim:
+    def __init__(self, m):
+        self.m = m
+
+    def __call__(self, im):
+        w, h = im.size
+        a, b = int(w * self.m), int(h * self.m)
+        return im.crop((a, b, w - a, h - b))
+
+
+def tf(train, trim=0.0):
+    pre = [Trim(trim)] if trim else []
     aug = [T.RandomRotation(10), T.ColorJitter(0.2, 0.2)] if train else []
-    return T.Compose([T.Grayscale(3), T.Resize((224, 224)), *aug, T.ToTensor(), T.Normalize(MEAN, STD)])
+    return T.Compose([*pre, T.Grayscale(3), T.Resize((224, 224)), *aug, T.ToTensor(), T.Normalize(MEAN, STD)])
 
 
 def folder(root, train=False):
@@ -26,7 +37,7 @@ def loader(ds, bs=32, shuffle=False):
     return DataLoader(ds, batch_size=bs, shuffle=shuffle, num_workers=0)
 
 
-def gather(root):
+def gather(root: str) -> list[tuple[str, int]]:
     return sorted(
         (p, y)
         for y, c in enumerate(CLASSES)
@@ -36,8 +47,8 @@ def gather(root):
 
 
 class CXR(Dataset):
-    def __init__(self, items, train=False):
-        self.items, self.t = items, tf(train)
+    def __init__(self, items: list[tuple[str, int]], train: bool = False, trim: float = 0.0):
+        self.items, self.t = items, tf(train, trim)
 
     def __len__(self):
         return len(self.items)
@@ -47,7 +58,7 @@ class CXR(Dataset):
         return self.t(Image.open(p)), y
 
 
-def build(root, seed=42):
+def build(root: str, seed: int = 42, trim: float = 0.0) -> list[CXR]:
     it = gather(root)
     parts = split([p for p, _ in it], seed)
-    return [CXR([it[i] for i in ix], k == 0) for k, ix in enumerate(parts)]
+    return [CXR([it[i] for i in ix], k == 0, trim) for k, ix in enumerate(parts)]

@@ -7,15 +7,17 @@ from src.evaluate import metrics, pick_threshold
 def summarize(yv, pv, yt, pt, borders):
     t = pick_threshold(yv, pv)
     m = metrics(yt, pt, t)
+    b = [v for v in borders if v == v]
     return {
         "threshold": float(t),
         "auroc": float(m["auroc"]),
         "sensitivity": float(m["sensitivity"]),
         "specificity": float(m["specificity"]),
         "cm": m["cm"],
-        "border_share": sum(borders) / len(borders),
-        "border_over_half": sum(b > 0.5 for b in borders),
-        "n_border": len(borders),
+        "border_share": sum(b) / len(b),
+        "border_over_half": sum(v > 0.5 for v in b),
+        "n_border": len(b),
+        "n_empty": len(borders) - len(b),
     }
 
 

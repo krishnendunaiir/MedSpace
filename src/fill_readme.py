@@ -1,5 +1,8 @@
 ﻿import json
+import re
 from pathlib import Path
+
+BORDER = re.compile(r"\bis (?:TBD|nan|\d\.\d+) \([^)]*\)\.")
 
 
 def fill(t, r):
@@ -8,13 +11,11 @@ def fill(t, r):
         ("| Sensitivity | TBD |", f"| Sensitivity | {r['sensitivity']:.3f} |"),
         ("| Specificity | TBD |", f"| Specificity | {r['specificity']:.3f} |"),
         ("| Confusion matrix [[TN, FP], [FN, TP]] | TBD |", f"| Confusion matrix [[TN, FP], [FN, TP]] | {r['cm']} |"),
-        (
-            "is TBD (a uniform map would give 0.36).",
-            f"is {r['border_share']:.2f} ({r['border_over_half']} of {r['n_border']} sampled test images above 0.5; a uniform map would give 0.36).",
-        ),
     )
     for a, b in s:
         t = t.replace(a, b, 1)
+    msg = f"is {r['border_share']:.2f} ({r['border_over_half']} of {r['n_border']} sampled test images above 0.5; a uniform map would give 0.36)."
+    t = BORDER.sub(msg, t, count=1)
     if "(threshold " not in t:
         t = t.replace("never on test", f"never on test (threshold {r['threshold']:.3f})", 1)
     return t

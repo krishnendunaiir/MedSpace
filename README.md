@@ -34,7 +34,7 @@ ROC and calibration plots are in `outputs/`.
 
 Grad-CAM on the last ResNet block (`layer4`), targeting the PNEUMONIA class. Examples are in `outputs/cam/`.
 
-Shortcut check: mean share of Grad-CAM heat in the outer 10% border is nan (56 of 200 sampled test images above 0.5; a uniform map would give 0.36). TBD (one sentence on what the heatmaps show).
+Shortcut check: mean share of Grad-CAM heat in the outer 10% border is 0.43 (56 of 194 sampled test images above 0.5; a uniform map would give 0.36). TBD (one sentence on what the heatmaps show).
 
 Missed pneumonia cases (`outputs/fn/`): TBD (what they have in common).
 
