@@ -17,16 +17,16 @@ Patient IDs are parsed from filenames and splits are grouped by patient, so no p
 - Model: ResNet-18 (ImageNet weights), 2-class head
 - Loss: cross-entropy with class weights (NORMAL 1.92, PNEUMONIA 0.68) to offset imbalance
 - Training: AdamW, lr 1e-4, TBD epochs, best checkpoint by validation AUROC
-- Threshold: chosen on the validation set (Youden's J), never on test
+- Threshold: chosen on the validation set (Youden's J), never on test (threshold 0.010)
 
 ## Results (test set)
 
 | Metric | Value |
 |---|---|
-| AUROC | TBD |
-| Sensitivity | TBD |
-| Specificity | TBD |
-| Confusion matrix [[TN, FP], [FN, TP]] | TBD |
+| AUROC | 0.996 |
+| Sensitivity | 0.985 |
+| Specificity | 0.958 |
+| Confusion matrix [[TN, FP], [FN, TP]] | [[253, 11], [9, 605]] |
 
 ROC and calibration plots are in `outputs/`.
 
@@ -34,7 +34,7 @@ ROC and calibration plots are in `outputs/`.
 
 Grad-CAM on the last ResNet block (`layer4`), targeting the PNEUMONIA class. Examples are in `outputs/cam/`.
 
-Shortcut check: mean share of Grad-CAM heat in the outer 10% border is TBD (a uniform map would give 0.36). TBD (one sentence on what the heatmaps show).
+Shortcut check: mean share of Grad-CAM heat in the outer 10% border is nan (56 of 200 sampled test images above 0.5; a uniform map would give 0.36). TBD (one sentence on what the heatmaps show).
 
 Missed pneumonia cases (`outputs/fn/`): TBD (what they have in common).
 

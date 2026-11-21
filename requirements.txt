@@ -1,7 +1,9 @@
 torch
 torchvision
+numpy
 pillow
 scikit-learn
 grad-cam
-pytestmatplotlib
+matplotlib
 gradio
+pytest
