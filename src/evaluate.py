@@ -1,4 +1,5 @@
-﻿import torch
+from src.cfg import TRIM, WEIGHTS
+import torch
 from sklearn.metrics import confusion_matrix, roc_auc_score, roc_curve
 
 from src.data import build, loader
@@ -33,9 +34,9 @@ def metrics(y, p, t):
 
 if __name__ == "__main__":
     dev = device()
-    _, va, te = build("data/chest_xray/chest_xray")
+    _, va, te = build("data/chest_xray/chest_xray", trim=TRIM)
     m = make(False)
-    m.load_state_dict(torch.load("best.pt", map_location=dev))
+    m.load_state_dict(torch.load(WEIGHTS, map_location=dev))
     m.to(dev)
     t = pick_threshold(*predict(m, loader(va), dev))
     print("threshold", round(t, 4))

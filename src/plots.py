@@ -1,4 +1,5 @@
-﻿import os
+from src.cfg import TRIM, WEIGHTS
+import os
 import shutil
 
 import matplotlib
@@ -44,9 +45,9 @@ if __name__ == "__main__":
     from src.utils import device
 
     dev = device()
-    _, va, te = build("data/chest_xray/chest_xray")
+    _, va, te = build("data/chest_xray/chest_xray", trim=TRIM)
     m = make(False)
-    m.load_state_dict(torch.load("best.pt", map_location=dev))
+    m.load_state_dict(torch.load(WEIGHTS, map_location=dev))
     m.to(dev)
     t = pick_threshold(*predict(m, loader(va), dev))
     y, p = predict(m, loader(te), dev)

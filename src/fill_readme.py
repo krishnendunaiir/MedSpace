@@ -5,19 +5,22 @@ from pathlib import Path
 BORDER = re.compile(r"\bis (?:TBD|nan|\d\.\d+) \([^)]*\)\.")
 
 
+def row(t, k, v):
+    return re.sub(rf"^\| {re.escape(k)} \| .*\|$", lambda _: f"| {k} | {v} |", t, count=1, flags=re.M)
+
+
 def fill(t, r):
-    s = (
-        ("| AUROC | TBD |", f"| AUROC | {r['auroc']:.3f} |"),
-        ("| Sensitivity | TBD |", f"| Sensitivity | {r['sensitivity']:.3f} |"),
-        ("| Specificity | TBD |", f"| Specificity | {r['specificity']:.3f} |"),
-        ("| Confusion matrix [[TN, FP], [FN, TP]] | TBD |", f"| Confusion matrix [[TN, FP], [FN, TP]] | {r['cm']} |"),
-    )
-    for a, b in s:
-        t = t.replace(a, b, 1)
+    t = row(t, "AUROC", f"{r['auroc']:.3f}")
+    t = row(t, "Sensitivity", f"{r['sensitivity']:.3f}")
+    t = row(t, "Specificity", f"{r['specificity']:.3f}")
+    t = row(t, "Confusion matrix [[TN, FP], [FN, TP]]", str(r["cm"]))
     msg = f"is {r['border_share']:.2f} ({r['border_over_half']} of {r['n_border']} sampled test images above 0.5; a uniform map would give 0.36)."
-    t = BORDER.sub(msg, t, count=1)
-    if "(threshold " not in t:
-        t = t.replace("never on test", f"never on test (threshold {r['threshold']:.3f})", 1)
+    t = BORDER.sub(lambda _: msg, t, count=1)
+    th = f"(threshold {r['threshold']:.3f})"
+    if "(threshold " in t:
+        t = re.sub(r"\(threshold [^)]*\)", lambda _: th, t, count=1)
+    else:
+        t = t.replace("never on test", f"never on test {th}", 1)
     return t
 
 

@@ -1,4 +1,5 @@
-﻿import random
+from src.cfg import TRIM, WEIGHTS
+import random
 
 import torch
 
@@ -16,9 +17,9 @@ if __name__ == "__main__":
     from src.utils import device
 
     dev = device()
-    te = build("data/chest_xray/chest_xray")[2]
+    te = build("data/chest_xray/chest_xray", trim=TRIM)[2]
     m = make(False)
-    m.load_state_dict(torch.load("best.pt", map_location=dev))
+    m.load_state_dict(torch.load(WEIGHTS, map_location=dev))
     m.to(dev)
     ids = random.Random(0).sample(range(len(te)), 200)
     r = []

@@ -1,4 +1,5 @@
-﻿import json
+from src.cfg import TRIM, WEIGHTS
+import json
 import os
 
 from src.evaluate import metrics, pick_threshold
@@ -34,9 +35,9 @@ if __name__ == "__main__":
     from src.utils import device
 
     dev = device()
-    _, va, te = build("data/chest_xray/chest_xray")
+    _, va, te = build("data/chest_xray/chest_xray", trim=TRIM)
     m = make(False)
-    m.load_state_dict(torch.load("best.pt", map_location=dev))
+    m.load_state_dict(torch.load(WEIGHTS, map_location=dev))
     m.to(dev)
     yv, pv = predict(m, loader(va), dev)
     yt, pt = predict(m, loader(te), dev)

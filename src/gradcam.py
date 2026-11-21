@@ -1,4 +1,5 @@
-﻿import torch
+from src.cfg import TRIM, WEIGHTS
+import torch
 from PIL import Image
 from pytorch_grad_cam import GradCAM
 from pytorch_grad_cam.utils.image import show_cam_on_image
@@ -31,9 +32,9 @@ if __name__ == "__main__":
     from src.utils import device
 
     dev = device()
-    te = build("data/chest_xray/chest_xray")[2]
+    te = build("data/chest_xray/chest_xray", trim=TRIM)[2]
     m = make(False)
-    m.load_state_dict(torch.load("best.pt", map_location=dev))
+    m.load_state_dict(torch.load(WEIGHTS, map_location=dev))
     m.to(dev)
     os.makedirs("outputs/cam", exist_ok=True)
     ids = [i for c in (0, 1) for i in [j for j, (_, y) in enumerate(te.items) if y == c][:4]]
