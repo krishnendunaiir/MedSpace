@@ -17,9 +17,19 @@ st.set_page_config(page_title="Chest X-ray classifier", page_icon=Image.open(ICO
 MODES = ["Upload / drag & drop", "Webcam", "Paste from clipboard"]
 
 
+def weights_url():
+    u = os.environ.get("CXR_WEIGHTS_URL")
+    if u:
+        return u
+    try:
+        return st.secrets.get("CXR_WEIGHTS_URL")
+    except Exception:
+        return None
+
+
 @st.cache_resource
 def model():
-    return load(ensure(WEIGHTS, os.environ.get("CXR_WEIGHTS_URL")))
+    return load(ensure(WEIGHTS, weights_url()))
 
 
 def to_image(f):
