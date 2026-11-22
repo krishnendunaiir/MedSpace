@@ -1,8 +1,8 @@
-﻿import gradio as gr
+import gradio as gr
 
 from src.app import predict
 
-NOTE = "Research demo only. Not a medical device and not for diagnosis."
+NOTE = "Research demo only. Not a medical device and not for diagnosis. Do not upload real patient data."
 
 
 def build_ui(m):

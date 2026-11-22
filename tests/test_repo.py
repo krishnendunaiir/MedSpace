@@ -1,4 +1,4 @@
-﻿from pathlib import Path
+from pathlib import Path
 
 
 def txt(p):
@@ -21,4 +21,3 @@ def test_readme_state():
     t = txt("README.md")
     assert "TBD" not in t
     assert "is nan" not in t
-    assert "Live demo" not in t

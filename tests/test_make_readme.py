@@ -1,4 +1,4 @@
-﻿from src.make_readme import render
+from src.make_readme import render
 
 R = {"auroc": 0.99, "sensitivity": 0.9, "specificity": 0.8, "cm": [[1, 2], [3, 4]], "threshold": 0.05, "border_share": 0.4, "n_empty": 6}
 T = {**R, "auroc": 0.98, "border_share": 0.3, "n_empty": 16}
@@ -30,3 +30,8 @@ def test_notes():
     n = {"heatmap_note": "h", "missed_note": "m"}
     t = render(R, T, A, n)
     assert "TBD" not in t and render(R, T, A, n) == t
+
+
+def test_space_url():
+    t = render(R, T, A, {"space_url": "https://x.y/z"})
+    assert "Live demo: https://x.y/z" in t

@@ -16,6 +16,7 @@ def render(b, t, a, n, gif=False):
         "",
         "ResNet-18 fine-tuned to classify chest X-rays as NORMAL or PNEUMONIA, with Grad-CAM heatmaps and ablation tests that check what the model relies on. Research demo only. Not a medical device and not for diagnosis.",
         "",
+        *([f"Live demo: {n['space_url']}", ""] if n.get("space_url") else []),
         *(["![demo](outputs/demo.gif)", ""] if gif else []),
         "## Data",
         "",
