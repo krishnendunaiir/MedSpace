@@ -1,6 +1,9 @@
+import base64
 import os
+from pathlib import Path
 
 import streamlit as st
+from PIL import Image
 from streamlit_paste_button import paste_image_button
 
 from src.app import load, run_stages
@@ -8,7 +11,8 @@ from src.cfg import WEIGHTS
 from src.medimg import EXTS, load_image
 from src.weights import ensure
 
-st.set_page_config(page_title="Chest X-ray classifier", page_icon="\U0001FAC1", layout="centered")
+ICON = Path(__file__).resolve().parent / "assets" / "icon.png"
+st.set_page_config(page_title="Chest X-ray classifier", page_icon=Image.open(ICON), layout="centered")
 
 MODES = ["Upload / drag & drop", "Webcam", "Paste from clipboard"]
 
@@ -36,11 +40,16 @@ def get_image(mode):
     if mode == MODES[1]:
         f = st.camera_input("Take a photo")
         return to_image(f) if f else None
-    r = paste_image_button("\U0001F4CB Paste image from clipboard", key="paste")
+    r = paste_image_button("Paste image from clipboard", key="paste")
     return r.image_data.convert("RGB") if r.image_data is not None else None
 
 
-st.markdown("<h1 style='text-align:center'>\U0001FAC1 Chest X-ray classifier</h1>", unsafe_allow_html=True)
+LOGO = base64.b64encode(ICON.read_bytes()).decode()
+st.markdown(
+    f"<div style='text-align:center'><img src='data:image/png;base64,{LOGO}' width='88'>"
+    "<h1 style='margin:0.1em 0 0'>Chest X-ray classifier</h1></div>",
+    unsafe_allow_html=True,
+)
 st.markdown(
     "<p style='text-align:center'>Add a chest X-ray to see what the model predicts and where it looked.</p>",
     unsafe_allow_html=True,
@@ -77,3 +86,5 @@ with st.expander("About this demo"):
         "Accepted formats: DICOM (.dcm), PNG, JPG, WebP, TIFF, BMP. For DICOM, only the pixel data is used and header fields such as patient name are not displayed or saved by this app, "
         "but the file is still uploaded to wherever the app runs, so use de-identified images."
     )
+
+st.caption("Tip: switch between light and dark mode from the menu at the top right (Settings, then Theme). It follows your system setting by default.")

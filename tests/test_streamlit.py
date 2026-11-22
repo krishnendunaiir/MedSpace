@@ -32,3 +32,4 @@ def test_app_runs():
     assert not at.exception
     assert "Chest X-ray classifier" in at.markdown[0].value
     assert at.radio[0].options == ["Upload / drag & drop", "Webcam", "Paste from clipboard"]
+    assert any("light and dark" in c.value for c in at.caption)
