@@ -6,7 +6,8 @@ import streamlit as st
 from PIL import Image
 from streamlit_paste_button import paste_image_button
 
-from src.app import load, run_stages
+from src.app import label, load, run_stages
+from src.calibrate import load_cal
 from src.cfg import WEIGHTS
 from src.medimg import EXTS, load_image
 from src.weights import ensure
@@ -15,6 +16,7 @@ ICON = Path(__file__).resolve().parent / "assets" / "icon.png"
 st.set_page_config(page_title="Chest X-ray classifier", page_icon=Image.open(ICON), layout="centered")
 
 MODES = ["Upload / drag & drop", "Webcam", "Paste from clipboard"]
+CAL = load_cal()
 
 
 def weights_url():
@@ -79,12 +81,19 @@ if img is None:
 else:
     bar = st.progress(0.05, text="Loading model...")
     m = model()
-    probs, cam = run_stages(m, img, lambda v, t: bar.progress(v, text=t))
+    probs, cam = run_stages(m, img, lambda v, t: bar.progress(v, text=t), CAL)
     bar.empty()
-    st.subheader(f"Model output: {max(probs, key=probs.get)}")
+    st.subheader(f"Model output: {label(probs, CAL)}")
     for k, v in probs.items():
         st.progress(min(max(v, 0.0), 1.0), text=f"{k}: {v:.1%}")
-    st.caption("These are model scores, not calibrated probabilities, and not a diagnosis.")
+    if CAL:
+        st.caption(
+            "Scores are calibrated with a logistic fit on a validation set from this dataset, "
+            f"and the label uses a tuned threshold of {CAL['threshold']:.2f}. "
+            "They reflect this dataset's pneumonia prevalence and are not patient risk or a diagnosis."
+        )
+    else:
+        st.caption("These are uncalibrated model scores, not a diagnosis.")
     c1, c2 = st.columns(2)
     c1.image(img, caption="Your image")
     c2.image(cam, caption="Grad-CAM: regions that pushed toward pneumonia")
